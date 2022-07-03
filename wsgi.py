@@ -1,7 +1,7 @@
 from gevent.pywsgi import WSGIServer
 from app import application
-from database import db
-from settings import *
+from backend.database import db
+from backend.settings import *
 
 
 print('----STARTUP----')

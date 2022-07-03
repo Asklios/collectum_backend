@@ -1,11 +1,11 @@
 from flask import request
 from flask_restx import Resource, fields, marshal
 
-from api import api
-import settings
-from auth import check_token
-from database import db
-from database.dtos import data_dto_from_dict, project_dto_from_dict
+from backend.api import api
+from backend import settings
+from backend.auth import check_token, access_token_parser
+from backend.database import db
+from backend.database.dtos import data_dto_from_dict, project_dto_from_dict
 
 namespace = api.namespace('data', description='Private data endpoints')
 
@@ -68,8 +68,8 @@ project_id_data_id = api.model(
 @namespace.route('/')
 class Data(Resource):
 
-    @api.doc(body=data_model, security='bearerAuth')
-    @api.expect(data_model, validate=True)
+    @api.doc(model=data_model, security='bearerAuth', responses={400: 'Bad Request'})
+    @api.expect(access_token_parser, data_model, validate=True)
     @check_token
     def post(self):
         j = request.json
@@ -81,8 +81,8 @@ class Data(Resource):
 
         return marshal(data.to_dict(), data_model), 200
 
-    @api.doc(body=data_model_list, security='bearerAuth')
-    @api.expect(project_id, validate=True)
+    @api.doc(model=data_model_list, security='bearerAuth', responses={400: 'Bad Request', 404: 'Not Found'})
+    @api.expect(access_token_parser, project_id, validate=True)
     @check_token
     def get(self):
         j = request.json
@@ -112,8 +112,8 @@ class Data(Resource):
 @namespace.route('/history')
 class DataHistory(Resource):
 
-    @api.doc(body=data_model_list, security='bearerAuth')
-    @api.expect(project_id_data_id, validate=True)
+    @api.doc(model=data_model_list, security='bearerAuth', responses={400: 'Bad Request', 404: 'No data found'})
+    @api.expect(access_token_parser, project_id_data_id, validate=True)
     @check_token
     def get(self):
         j = request.json
@@ -148,8 +148,8 @@ class DataHistory(Resource):
 @namespace.route('/projects')
 class Projects(Resource):
 
-    @api.doc(body=project_model, security='bearerAuth')
-    @api.expect(project_model, validate=True)
+    @api.doc(model=project_model, security='bearerAuth', responses={400: 'Bad Request', 401: 'Unauthorized'})
+    @api.expect(access_token_parser, project_model, validate=True)
     @check_token
     def post(self):
         j = request.json
@@ -169,7 +169,8 @@ class Projects(Resource):
 
         return marshal(project.to_dict(), project_model), 200
 
-    @api.doc(body=projects_model, security='bearerAuth')
+    @api.doc(model=projects_model, security='bearerAuth')
+    @api.expect(access_token_parser)
     @check_token
     def get(self):
         projects = {"projects": [

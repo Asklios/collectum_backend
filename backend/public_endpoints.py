@@ -1,16 +1,21 @@
 from flask_restx import Resource, fields
 
-import settings
-from api import api
+from backend import settings
+from backend.api import api
 
 namespace = api.namespace('info', description='Open info Endpoints')
-
 
 health: {str: bool}
 health = {
     'db': True
 }
 
+health_model = api.model(
+    'Health',
+    {
+        "message": fields.String(description='Health')
+    }
+)
 
 identity_provider = api.model(
     'IdentityProvider',
@@ -24,8 +29,9 @@ identity_provider = api.model(
 
 @namespace.route('/health')
 class Health(Resource):
-    @staticmethod
-    def get():
+
+    @api.doc(model=health_model, responses={500: "{'db' : False}", 200: 'healthy'})
+    def get(self):
         global health
         if all(health.values()):
             return {'message': 'healthy'}, 200
@@ -36,10 +42,10 @@ class Health(Resource):
 @namespace.route('/identity-provider')
 class IdentityProvider(Resource):
 
-        @staticmethod
-        def get():
-            return {
-                "client_id": settings.KEYCLOAK_CLIENT_ID,
-                "base_url": settings.KEYCLOAK_BASE_URL,
-                "realm": settings.KEYCLOAK_REALM,
-            }, 200
+    @api.doc(model=identity_provider)
+    def get(self):
+        return {
+                   "client_id": settings.KEYCLOAK_CLIENT_ID,
+                   "base_url": settings.KEYCLOAK_BASE_URL,
+                   "realm": settings.KEYCLOAK_REALM,
+               }, 200

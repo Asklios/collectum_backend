@@ -1,11 +1,12 @@
 from flask_restx import Api
 
-import settings
+from backend import settings
 
 authorizations = {
     'bearerAuth': {
         'type': 'http',
-        'scheme': 'basic'
+        'scheme': 'bearer',
+        'bearerFormat': 'Bearer JWT'
     }
 }
 

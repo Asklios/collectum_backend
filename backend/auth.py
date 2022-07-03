@@ -3,8 +3,8 @@ from flask import request
 from flask_restx import reqparse
 from jwt import ExpiredSignatureError, DecodeError
 
-from api import api
-from settings import JWT_PUBLIC_KEY
+from backend.api import api
+from backend.settings import JWT_PUBLIC_KEY
 
 
 class User:

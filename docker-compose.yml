@@ -1,8 +1,38 @@
 version: '3.5'
 
 services:
+  database:
+    image: postgres:14
+    container_name: collectum-db
+    restart: unless-stopped
+    volumes:
+      - ./data/database:/var/lib/postgresql/data
+    env_file:
+      - database.env
+    networks:
+      - collectum
+
   backend:
     build: .
-    container_name: collectum-backend1
+    #image: ghcr.io/asklios/collectum_backend:nightly
+    container_name: collectum
     ports:
       - '5000:5000'
+    restart: unless-stopped
+    depends_on:
+      - database
+    links:
+      - database
+    env_file:
+      - database.env
+      - collectum.env
+    networks:
+      - collectum
+      - nginx
+
+networks:
+  collectum:
+     name: collectum
+     internal: true
+  #nginx:
+     #external: true

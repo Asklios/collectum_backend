@@ -3,9 +3,9 @@ from typing import List
 
 from pg8000.dbapi import Connection, DatabaseError, Cursor
 
-import pg_helper
-from dtos import Data, Project
-from pg_helper import get_conn
+from backend.database import pg_helper
+from backend.database.dtos import Data, Project
+from backend.database.pg_helper import get_conn
 
 
 def init_db():
@@ -71,7 +71,6 @@ def get_data_history(project: int, data_id: int, conn: Connection = None, cur: C
     if data is None:
         return None
     return [Data(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8]) for data in data]
-
 
 
 @get_conn

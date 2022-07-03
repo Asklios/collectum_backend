@@ -8,9 +8,6 @@ RESTPLUS_SWAGGER_EXPANSION = os.environ.get('RESTPLUS_SWAGGER_EXPANSION', 'list'
 RESTPLUS_VAL = os.environ.get('RESTPLUS_VAL', True)
 RESTPLUS_MASK_SWAGGER = os.environ.get('RESTPLUS_MASK_SWAGGER', False)
 
-RECEIVE_TOKEN = os.environ.get('RECEIVE_TOKEN', 'test_token')
-SEND_TOKEN = os.environ.get('SEND_TOKEN', 'test_token')
-
 EXPORT_SWAGGER_FILE = os.environ.get('EXPORT_SWAGGER_FILE') is not None
 
 KEYCLOAK_CLIENT_ID = os.environ.get('KEYCLOAK_CLIENT_ID', 'test_client_id')

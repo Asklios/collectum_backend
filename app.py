@@ -2,10 +2,10 @@ import json
 
 from flask import Flask, Blueprint
 
-from settings import *
-from api import api
-from public_endpoints import namespace as public_namespace
-from private_endpoints import namespace as private_namespace
+from backend.settings import *
+from backend.api import api
+from backend.public_endpoints import namespace as public_namespace
+from backend.private_endpoints import namespace as private_namespace
 
 app = Flask(__name__)
 
